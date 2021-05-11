@@ -1,7 +1,10 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  createStackNavigator,
+  StackNavigationOptions,
+} from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   TabOneScreen,
   TabTwoScreen,
@@ -9,9 +12,15 @@ import {
   TabFourScreen,
   AboutScreen,
 } from 'views';
-import {Colors, Typography} from 'styles';
+import { Colors, Typography } from 'styles';
 import { Icon } from 'components';
 import { eIcons } from 'models';
+import Amplify from 'aws-amplify';
+import { withAuthenticator } from 'aws-amplify-react-native';
+import { awsConfig } from 'environment';
+
+Amplify.Logger.LOG_LEVEL = 'DEBUG';
+Amplify.configure(awsConfig);
 
 const NavOptions: StackNavigationOptions = {
   headerStyle: {
@@ -67,16 +76,19 @@ function AboutStackScreen() {
   );
 }
 
-
 const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        tabBarOptions={{activeTintColor: Colors.greenDark, inactiveTintColor: Colors.textDefault, labelStyle: {fontSize: Typography.fontSizeXXS}}}
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
+        tabBarOptions={{
+          activeTintColor: Colors.greenDark,
+          inactiveTintColor: Colors.textDefault,
+          labelStyle: { fontSize: Typography.fontSizeXXS },
+        }}
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
             let iconName: eIcons = eIcons.tabOne;
 
             if (route.name === 'Tab One') {
@@ -107,4 +119,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withAuthenticator(App);
